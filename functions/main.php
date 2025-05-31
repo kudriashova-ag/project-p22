@@ -57,36 +57,49 @@ function uploadImage(){
         redirect("/gallery");
     }
 
-
     $fileName = uniqid("img_") . "." . $fileExt;
-    
+
     if(!file_exists("uploads"))
         mkdir("uploads", 0755, true);
 
    if( move_uploaded_file($tmp_name, "uploads/$fileName") ){
        Messages::setMessage("File uploaded successfully", 'success');
+       resizeImage("uploads/$fileName", 300);
        redirect("/gallery");
    }
 
    Messages::setMessage("File upload error", 'danger');
    redirect("/gallery");
-
 }
 
 
-/* 
+function resizeImage($path, $size){
+    $src = imagecreatefromstring(file_get_contents($path));
 
-Array
-(
-    [image] => Array
-        (
-            [name] => modulnyy-parket-model-8-85642494.jpg
-            [full_path] => modulnyy-parket-model-8-85642494.jpg
-            [type] => image/jpeg
-            [tmp_name] => C:\OSPanel\userdata\temp\upload\phpBD55.tmp
-            [error] => 0
-            [size] => 121064
-        )
+    list($src_width, $src_height) = getimagesize($path);
 
-)
-*/
+    $dest_width = $size;
+    $dest_height = $size * $src_height / $src_width;
+
+    $dest = imagecreatetruecolor($dest_width, $dest_height);
+
+    imagecopyresampled($dest, $src, 0, 0, 0, 0, $dest_width, $dest_height, $src_width, $src_height);
+
+
+    $fileExt = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+
+    extract(pathinfo($path)); 
+    $pathToSave = $dirname . "/medium/" . $basename;
+
+    if(!file_exists($dirname . "/medium"))
+        mkdir($dirname . "/medium", 0755, true);
+
+    if($fileExt === 'jpg' || $fileExt === 'jpeg')
+        imagejpeg($dest, $pathToSave, 100);
+    else{
+        $functionSave = "image$fileExt";
+        $functionSave($dest, $pathToSave);
+    }
+
+}
+

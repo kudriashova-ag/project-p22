@@ -13,3 +13,4 @@
 
     <button class="btn btn-primary mt-3" name="action" value="uploadImage">Upload</button>
 </form>
+
