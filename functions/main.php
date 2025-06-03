@@ -110,7 +110,6 @@ function resizeImage($path, $size)
 
 
 
-
 function sendReview()
 {
     $name = $_POST['name'] ?? '';
@@ -121,6 +120,12 @@ function sendReview()
         OldInput::set($_POST);
         redirect("/reviews");
     }
+
+    $time = time(); 
+
+    $f = fopen("reviews.txt", "a");
+    fwrite($f, "$time|$name|$message\n");
+    fclose($f);
 
     Messages::setMessage("Review sent successfully");
     redirect("/reviews");
