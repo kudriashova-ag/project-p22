@@ -123,8 +123,12 @@ function sendReview()
 
     $time = time(); 
 
-    $f = fopen("reviews.txt", "a");
-    fwrite($f, "$time|$name|$message\n");
+
+    $reviews = json_decode(file_get_contents("reviews.json"), true);
+    $reviews[] = compact('name', 'message', 'time');
+
+    $f = fopen("reviews.json", "w");
+    fwrite($f, json_encode($reviews));
     fclose($f);
 
     Messages::setMessage("Review sent successfully");
