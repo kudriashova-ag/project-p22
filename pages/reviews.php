@@ -17,3 +17,12 @@
 
     <button class="btn btn-primary mt-3" name="action" value="sendReview">Send</button>
 </form>
+
+<!-- 
+вивести відгуки нові - на початку
+
+Name      date
+Message
+
+
+ -->

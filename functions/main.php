@@ -123,7 +123,6 @@ function sendReview()
 
     $time = time(); 
 
-
     $reviews = json_decode(file_get_contents("reviews.json"), true);
     $reviews[] = compact('name', 'message', 'time');
 
